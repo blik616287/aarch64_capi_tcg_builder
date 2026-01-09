@@ -1,0 +1,81 @@
+---
+# Local ARM64 CAPI Image Builder Setup
+#
+# This playbook can be used to set up a local ARM64 build environment.
+# Run with: ansible-playbook -i localhost, -c local setup-builder.yml
+#
+- name: Configure ARM CAPI Image Builder Host
+  hosts: all
+  become: yes
+  vars:
+    kubernetes_version: "1.33.0"
+    image_builder_dir: /opt/image-builder/image-builder
+    output_dir: /opt/image-builder/output
+
+  tasks:
+    - name: Ensure QEMU ARM64 emulation is enabled (x86 hosts only)
+      command: update-binfmts --enable qemu-aarch64
+      changed_when: false
+      when: ansible_architecture != "aarch64"
+      ignore_errors: yes
+
+    - name: Verify binfmt_misc is working (x86 hosts only)
+      shell: |
+        cat /proc/sys/fs/binfmt_misc/qemu-aarch64 | grep enabled
+      register: binfmt_check
+      changed_when: false
+      failed_when: "'enabled' not in binfmt_check.stdout"
+      when: ansible_architecture != "aarch64"
+      ignore_errors: yes
+
+    - name: Create output directory
+      file:
+        path: "{{ output_dir }}"
+        state: directory
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_id }}"
+        mode: '0755'
+
+    - name: Install additional dependencies for image-builder
+      apt:
+        name:
+          - libguestfs-tools
+          - virtinst
+          - ovmf
+          - swtpm
+          - libnbd-bin
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Install image-builder Python dependencies
+      pip:
+        name:
+          - ansible
+          - passlib
+          - netaddr
+        state: present
+        extra_args: --user
+      become: no
+
+    - name: Install image-builder dependencies via make
+      shell: |
+        cd {{ image_builder_dir }}/images/capi
+        make deps-qemu
+      args:
+        creates: "{{ image_builder_dir }}/images/capi/.local/bin/packer"
+      when: image_builder_dir is exists
+      become: no
+
+    - name: Print build instructions
+      debug:
+        msg: |
+          Build host is ready!
+
+          To build the ARM64 CAPI image:
+            ./scripts/build-and-test.sh --local
+
+          Or with Docker:
+            ./scripts/build-and-test.sh --local-docker
+
+          Output will be in ./output/

@@ -1,0 +1,33 @@
+# Build output
+output/*.qcow2
+output/*.raw
+output/*.vmdk
+output/*.ova
+output/*.ovf
+output/*.mf
+output/pxe/
+
+# Build logs
+build.log
+test.log
+
+# Generated build files (created during build, not source)
+local-build/arm64-vars.json
+local-build/cloud-init/
+local-build/efivars.fd
+local-build/*.pkr.hcl
+local-build/pxe-files/
+local-build/output/
+
+# NOTE: Do NOT ignore local-build/image-builder/ - it's a git submodule
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db

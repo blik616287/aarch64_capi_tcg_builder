@@ -1,0 +1,64 @@
+{
+  "kubernetes_semver": "v1.33.0",
+  "kubernetes_series": "v1.33",
+  "kubernetes_source_type": "pkg",
+  "kubernetes_rpm_version": "1.33.0",
+  "kubernetes_deb_version": "1.33.0-1.1",
+  "kubernetes_rpm_repo": "https://pkgs.k8s.io/core:/stable:/v1.33/rpm/",
+  "kubernetes_deb_repo": "https://pkgs.k8s.io/core:/stable:/v1.33/deb/",
+  "kubernetes_rpm_gpg_key": "https://pkgs.k8s.io/core:/stable:/v1.33/rpm/repodata/repomd.xml.key",
+  "kubernetes_deb_gpg_key": "https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key",
+  "kubernetes_cni_semver": "v1.4.0",
+  "kubernetes_cni_source_type": "pkg",
+  "crictl_version": "1.29.0",
+  "containerd_version": "1.7.13",
+  "containerd_sha256": "",
+
+  "build_name": "ubuntu-2204-arm64-capi",
+  "build_timestamp": "{{timestamp}}",
+
+  "iso_url": "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-arm64.img",
+  "iso_checksum_type": "sha256",
+  "iso_checksum_url": "https://cloud-images.ubuntu.com/jammy/current/SHA256SUMS",
+
+  "os_display_name": "Ubuntu 22.04 ARM64",
+  "distro_name": "ubuntu",
+  "distro_version": "22.04",
+  "distro_arch": "arm64",
+
+  "guest_os_type": "ubuntu-64",
+  "disk_size": "20480",
+  "memory": "4096",
+  "cpus": "4",
+
+  "headless": "true",
+  "ssh_username": "ubuntu",
+  "ssh_password": "ubuntu",
+  "ssh_timeout": "30m",
+
+  "output_directory": "./output-arm64-capi",
+  "format": "qcow2",
+
+  "qemu_binary": "qemu-system-aarch64",
+  "accelerator": "tcg",
+  "machine_type": "virt",
+  "cpu_type": "cortex-a72",
+  "firmware": "/usr/share/AAVMF/AAVMF_CODE.fd",
+
+  "cloud_init_apt_packages": "cloud-init cloud-guest-utils cloud-initramfs-growroot",
+  "extra_debs": "",
+  "extra_repos": "",
+
+  "ansible_user_vars": "",
+  "custom_role": "",
+  "custom_role_names": "",
+
+  "node_custom_roles_pre": "",
+  "node_custom_roles_post": "",
+
+  "goss_vars_file": "",
+  "goss_tests_dir": "",
+
+  "disable_public_repos": "false",
+  "reenable_public_repos": "true"
+}

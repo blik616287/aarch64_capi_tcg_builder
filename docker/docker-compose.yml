@@ -1,0 +1,43 @@
+version: '3.8'
+
+# ARM64 CAPI Image Builder - Docker Compose Configuration
+#
+# Usage:
+#   docker-compose -f docker/docker-compose.yml up --build
+#
+# Environment variables:
+#   K8S_VERSION         - Kubernetes version (default: v1.32.4)
+#   CONTAINERD_VERSION  - containerd version (default: 2.0.4)
+#   CNI_VERSION         - CNI plugins version (default: 1.6.0)
+#   CRICTL_VERSION      - crictl version (default: 1.32.0)
+#   RUNC_VERSION        - runc version (default: 1.2.8)
+#   HOST_UID/HOST_GID  - Host user/group IDs for file permissions
+
+services:
+  capi-builder:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        UID: ${HOST_UID:-1000}
+        GID: ${HOST_GID:-1000}
+        PACKER_VERSION: "1.10.0"
+    privileged: true  # Required for QEMU emulation
+    volumes:
+      # Output directory for built images
+      - ../output:/build/output
+      # Cache for image-builder repo and intermediate files
+      - ../local-build:/build/local-build
+    environment:
+      - K8S_VERSION=${K8S_VERSION:-v1.32.4}
+      - CONTAINERD_VERSION=${CONTAINERD_VERSION:-2.0.4}
+      - CNI_VERSION=${CNI_VERSION:-1.6.0}
+      - CRICTL_VERSION=${CRICTL_VERSION:-1.32.0}
+      - RUNC_VERSION=${RUNC_VERSION:-1.2.8}
+    # Use tmpfs for better I/O performance
+    tmpfs:
+      - /tmp:size=10G
+    # Increase shared memory for QEMU
+    shm_size: 2g
+    stdin_open: true
+    tty: true
