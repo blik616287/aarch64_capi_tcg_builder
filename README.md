@@ -196,4 +196,4 @@ For faster builds, use an ARM64 host with native KVM.
 
 ## License
 
-Internal use only.
+[MIT](LICENSE) © 2026 Martin Forde <mforde84@gmail.com>, [Blik Labs](https://bliklabs.com).
